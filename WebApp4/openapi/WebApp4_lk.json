@@ -1,0 +1,150 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "LK API",
+    "version": "v1"
+  },
+  "paths": {
+    "/save-file": {
+      "post": {
+        "tags": [
+          "Lk"
+        ],
+        "summary": "Uploads a file to the server for the current user.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "description": "The file being uploaded.",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-data": {
+      "get": {
+        "tags": [
+          "Lk"
+        ],
+        "summary": "Returns a stream containing diagnostic data based on provided parameters.",
+        "parameters": [
+          {
+            "name": "r1",
+            "in": "query",
+            "description": "String parameter used to filter or label the data.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "r2",
+            "in": "query",
+            "description": "Numeric parameter used for selection or paging.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "dt",
+            "in": "query",
+            "description": "Date/time parameter used to scope the returned data.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string",
+            "description": "Код ошибки",
+            "nullable": true
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Сообщение об ошибке",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Ошибка"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Lk"
+    }
+  ]
+}

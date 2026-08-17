@@ -1,0 +1,154 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "DPV API",
+    "version": "v1"
+  },
+  "paths": {
+    "/documents/save": {
+      "post": {
+        "tags": [
+          "Dpv"
+        ],
+        "summary": "Saves provided documents and returns the result of the operation.",
+        "requestBody": {
+          "description": "Documents to save.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItemRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItemRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCartItemResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCartItemResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCartItemResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddCartItemRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Идентификатор пользователя",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название товара",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Количество товара",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "description": "Цена товара",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Информация о товаре, который нужно добавить в корзину"
+      },
+      "AddCartItemResponse": {
+        "type": "object",
+        "properties": {
+          "cartId": {
+            "type": "string",
+            "description": "Идентификатор корзины",
+            "format": "uuid"
+          },
+          "cartItemId": {
+            "type": "string",
+            "description": "Идентификатор товара",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название товара",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Количество товара",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "description": "Цена товара",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Документы были сохранены"
+      },
+      "ApiErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string",
+            "description": "Код ошибки",
+            "nullable": true
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Сообщение об ошибке",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Ошибка"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Dpv"
+    }
+  ]
+}

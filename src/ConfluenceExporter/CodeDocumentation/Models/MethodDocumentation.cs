@@ -7,6 +7,7 @@ namespace ConfluenceExporter.CodeDocumentation.Models;
 public sealed class MethodDocumentation
 {
     public required string Name { get; init; }
+    public string? SourceRelativePath { get; init; }
     public string? Description { get; init; }
     public required string DeclaringType { get; init; }
     public required string Signature { get; init; }

@@ -7,6 +7,8 @@ public sealed class HandlerDocumentation
 {
     public required string HandlerName { get; init; }
 
+    public string? SourceRelativePath { get; init; }
+
     public string? HandlerDescription { get; init; }
 
     /// <summary>

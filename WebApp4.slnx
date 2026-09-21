@@ -2,6 +2,9 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ConfluenceExporter.Tests/ConfluenceExporter.Tests.csproj" />
+  </Folder>
   <Project Path="src/ConfluenceExporter/ConfluenceExporter.csproj" Id="b2fb251c-cfd5-4be4-8f48-b663c570c0ee" />
   <Project Path="src/WebApp4.Application/WebApp4.Application.csproj" Id="78553dbe-10fb-4d21-81e2-7d85cd417153" />
   <Project Path="src/WebApp4.Shared/WebApp4.Shared.csproj" Id="8d3f0204-f228-4a23-9210-7f39de7b29b0" />

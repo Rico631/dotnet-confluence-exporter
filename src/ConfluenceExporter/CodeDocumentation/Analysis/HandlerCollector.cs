@@ -34,6 +34,7 @@ public sealed class HandlerCollector(Compilation compilation, string requestHand
         return new HandlerDocumentation
         {
             HandlerName = handler.ToDisplayString(),
+            SourceRelativePath = GetSourceRelativePath(handler),
             HandlerDescription = GetSummary(handler),
             Commits = CollectCommits(handler).ToList(),
             Request = CreateTypeDocumentation(requestType),
@@ -255,7 +256,7 @@ public sealed class HandlerCollector(Compilation compilation, string requestHand
         return new MethodDocumentation
         {
             Name = node.Method.Name,
-
+            SourceRelativePath = GetSourceRelativePath(node.Method),
             Description =
                 GetMethodSummary(node.Method),
 
@@ -269,5 +270,33 @@ public sealed class HandlerCollector(Compilation compilation, string requestHand
                 .Select(ToDocumentation)
                 .ToList()
         };
+    }
+
+    private static string? GetSourceRelativePath(ISymbol symbol)
+    {
+        var filePath = symbol.Locations
+            .FirstOrDefault(x => x.IsInSource)?
+            .SourceTree?
+            .FilePath;
+
+        if (string.IsNullOrWhiteSpace(filePath))
+            return null;
+
+        var repositoryPath = GitRepositoryLocator.FindRepositoryRoot(filePath);
+
+        if (string.IsNullOrWhiteSpace(repositoryPath))
+            return null;
+
+        var relativePath = Path.GetRelativePath(repositoryPath, filePath);
+
+        return NormalizePath(relativePath);
+    }
+
+    private static string NormalizePath(string? path)
+    {
+        return path?
+            .Replace('\\', '/')
+            .TrimStart('/')
+            ?? string.Empty;
     }
 }

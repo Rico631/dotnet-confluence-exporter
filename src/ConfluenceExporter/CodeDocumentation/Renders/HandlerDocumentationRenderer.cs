@@ -28,7 +28,7 @@ public sealed class HandlerDocumentationRenderer
 
         var builder = new StringBuilder();
 
-        RenderHeader(builder, documentation);
+        RenderHeader(builder, documentation, options);
 
         RenderRequest(builder, documentation.Request);
 
@@ -40,7 +40,7 @@ public sealed class HandlerDocumentationRenderer
 
         RenderEntities(builder, documentation.Entities);
 
-        RenderCallTree(builder, documentation.CallTree);
+        RenderCallTree(builder, documentation.CallTree, options);
 
         RenderCommits(
             builder,
@@ -54,7 +54,8 @@ public sealed class HandlerDocumentationRenderer
 
     private static void RenderHeader(
         StringBuilder builder,
-        HandlerDocumentation documentation)
+        HandlerDocumentation documentation,
+        HandlerDocumentationRenderOptions options)
     {
         builder.AppendLine(
             $"<h1>{Encode(documentation.Request.Name)}</h1>");
@@ -65,7 +66,10 @@ public sealed class HandlerDocumentationRenderer
         RenderKeyValueRow(
             builder,
             "Handler",
-            $"<code>{Encode(documentation.HandlerName)}</code>");
+            BuildLinkOrPlainText(
+                documentation.HandlerName,
+                documentation.SourceRelativePath,
+                options));
 
         if (!string.IsNullOrWhiteSpace(documentation.HandlerDescription))
         {
@@ -554,7 +558,8 @@ public sealed class HandlerDocumentationRenderer
 
     private static void RenderCallTree(
         StringBuilder builder,
-        IReadOnlyCollection<MethodDocumentation> callTree)
+        IReadOnlyCollection<MethodDocumentation> callTree,
+        HandlerDocumentationRenderOptions options)
     {
         builder.AppendLine("<h2>Дерево вызовов</h2>");
 
@@ -570,7 +575,8 @@ public sealed class HandlerDocumentationRenderer
         {
             RenderMethod(
                 builder,
-                method);
+                method,
+                options);
         }
 
         builder.AppendLine("</ul>");
@@ -578,7 +584,8 @@ public sealed class HandlerDocumentationRenderer
 
     private static void RenderMethod(
         StringBuilder builder,
-        MethodDocumentation method)
+        MethodDocumentation method,
+        HandlerDocumentationRenderOptions options)
     {
         builder.AppendLine("<li>");
 
@@ -589,7 +596,8 @@ public sealed class HandlerDocumentationRenderer
         {
             RenderMethodContent(
                 builder,
-                method);
+                method,
+                options);
 
             builder.AppendLine("</li>");
             return;
@@ -622,7 +630,8 @@ public sealed class HandlerDocumentationRenderer
         {
             RenderMethod(
                 builder,
-                child);
+                child,
+                options);
         }
 
         builder.AppendLine("</ul>");
@@ -638,10 +647,16 @@ public sealed class HandlerDocumentationRenderer
 
     private static void RenderMethodContent(
         StringBuilder builder,
-        MethodDocumentation method)
+        MethodDocumentation method,
+        HandlerDocumentationRenderOptions? options = null)
     {
+        var nameText = BuildLinkOrPlainText(
+            method.Name,
+            method.SourceRelativePath,
+            options);
+
         builder.Append(
-            $"<strong>{Encode(method.Name)}</strong>");
+            $"<strong>{nameText}</strong>");
 
         if (!string.IsNullOrWhiteSpace(method.Description))
         {
@@ -700,6 +715,48 @@ public sealed class HandlerDocumentationRenderer
         return string.IsNullOrWhiteSpace(value)
             ? string.Empty
             : Encode(value);
+    }
+
+    private static string BuildLinkOrPlainText(
+        string displayText,
+        string? sourceRelativePath,
+        HandlerDocumentationRenderOptions? options = null)
+    {
+        var repositoryUrl = options?.GitlabRepositoryUrl;
+
+        if (string.IsNullOrWhiteSpace(repositoryUrl) ||
+            string.IsNullOrWhiteSpace(sourceRelativePath))
+        {
+            return Encode(displayText);
+        }
+
+        var reference = options?.GitlabReference ?? "main";
+        var url = BuildGitlabFileUrl(repositoryUrl, reference, sourceRelativePath);
+
+        return $"<a href=\"{Encode(url)}\">{Encode(displayText)}</a>";
+    }
+
+    private static string BuildGitlabFileUrl(
+        string repositoryUrl,
+        string reference,
+        string sourceRelativePath)
+    {
+        var normalizedRepository = repositoryUrl.TrimEnd('/');
+        var normalizedReference = Uri.EscapeDataString(reference);
+        var normalizedPath = NormalizeGitlabPath(sourceRelativePath);
+        return $"{normalizedRepository}/-/blob/{normalizedReference}/{normalizedPath}";
+    }
+
+    private static string NormalizeGitlabPath(string path)
+    {
+        var normalized = path
+            .Replace('\\', '/')
+            .TrimStart('/');
+
+        return string.Join('/',
+            normalized
+                .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(segment => Uri.EscapeDataString(segment)));
     }
 
     private static string Encode(string value)

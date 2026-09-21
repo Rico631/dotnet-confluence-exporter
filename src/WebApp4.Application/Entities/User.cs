@@ -9,6 +9,6 @@ namespace WebApp4.Application.Entities;
 /// </summary>
 public class User : Entity
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
 

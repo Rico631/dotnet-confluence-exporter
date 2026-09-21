@@ -23,7 +23,7 @@ public class CartItem : Entity
     /// <summary>
     /// Название товара
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Количество товара

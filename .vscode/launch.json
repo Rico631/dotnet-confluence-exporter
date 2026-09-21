@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "coreclr",
+            "request": "launch",
+            "name": "Launch ConfluenceExporter",
+            "program": "${workspaceFolder}/src/ConfluenceExporter/bin/Debug/net10.0/ConfluenceExporter.dll",
+            "cwd": "${workspaceFolder}/src/ConfluenceExporter",
+            "console": "integratedTerminal",
+            "preLaunchTask": "build ConfluenceExporter"
+        }
+    ]
+}

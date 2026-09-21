@@ -1,0 +1,52 @@
+schema: spec-driven
+
+context: |
+  # Language
+  Language: Russian (ru-RU)
+  All OpenSpec artifacts must be written in Russian.
+
+  # Technology
+  Backend: C#, .NET 10, ASP.NET Core
+  Database: PostgreSQL
+  ORM: Entity Framework Core
+  Messaging: Rebus
+  API: REST, gRPC
+  Documentation: OpenAPI
+
+  # Architecture
+  Architecture: microservices
+  Communication: REST/gRPC for synchronous communication,
+    messaging for asynchronous communication.
+
+  # Project conventions
+  Follow existing project patterns and conventions.
+  Prefer existing abstractions and libraries over introducing new ones.
+  Do not invent APIs, entities, services, or infrastructure that are not
+  supported by the existing codebase or requirements.
+
+  # Documentation language
+  Keep code identifiers, class names, method names, namespaces,
+  API names and protocol names in their original form.
+
+rules:
+  proposal:
+    - Clearly describe the problem and expected outcome.
+    - Identify affected components and dependencies.
+    - Do not prescribe implementation details unless they are required by the change.
+
+  specs:
+    - Write requirements in terms of observable system behavior.
+    - Use Given/When/Then-style scenarios.
+    - Each requirement must have at least one scenario.
+    - Keep implementation details out of requirements unless they are part of the contract.
+
+  design:
+    - Follow the existing architecture and project patterns.
+    - Explicitly describe affected services, APIs, data models and integrations.
+    - Explain important design decisions and their trade-offs.
+    - Do not introduce new technologies without justification.
+
+  tasks:
+    - Make tasks small and independently actionable.
+    - Reference the affected project, component or file where useful.
+    - Include tests for behavior affected by the change.

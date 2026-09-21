@@ -1,0 +1,6 @@
+schema: spec-driven
+created: 2026-09-21
+goal: Устранить вводящее в заблуждение имя проекта AppDocs без изменения
+  поведения инструмента
+skip_specs: true
+

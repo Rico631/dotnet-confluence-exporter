@@ -1,6 +1,9 @@
 using AwesomeAssertions;
+using ConfluenceExporter.CodeDocumentation.Analysis;
 using ConfluenceExporter.CodeDocumentation.Models;
 using ConfluenceExporter.CodeDocumentation.Renders;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
 namespace ConfluenceExporter.Tests;

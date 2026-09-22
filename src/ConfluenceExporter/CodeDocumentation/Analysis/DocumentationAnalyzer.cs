@@ -6,8 +6,9 @@ namespace ConfluenceExporter.CodeDocumentation.Analysis;
 
 public static class DocumentationAnalyzer
 {
-    public static async Task<IReadOnlyList<HandlerDocumentation>> AnalyzeAsync<T>()
+    public static async Task<IReadOnlyList<HandlerDocumentation>> AnalyzeAsync<T>(AnalysisOptions? options = null)
     {
+        var analysisOptions = options ?? new AnalysisOptions();
         var assembly = typeof(T).Assembly;
 
         var assemblyName = assembly.GetName().Name;
@@ -66,7 +67,7 @@ public static class DocumentationAnalyzer
                 $"Failed to create compilation for project '{project.Name}'.");
         }
 
-        var collector = new HandlerCollector(compilation);
+        var collector = new HandlerCollector(compilation, analysisOptions.RequestHandlerName);
 
         return collector.Collect();
     }
